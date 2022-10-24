@@ -1,14 +1,14 @@
 import data from "./sub-dealers-data.json" assert {type:'json'};
 import xlsx from "xlsx";
 
-let sheetData = [['Registered Dealer Email','Risk Start Date','Name of Certificate Holder','Gender','Mobile','Email','Address','City','State','Pincode','Manufacturing Year','Vehicle Registration No','Vehicle Manufacturer','Model','Variant','Engine No.','Chassis No.','Nominee Name','Nominee Relationship','Nominee Gender','Nominee Age','Plan','Plan Type','New Vehicle','Dealer ID','Timestamp']];
+let sheetData = [['Registered Dealer Email','Risk Start Date','Name of Certificate Holder','DOB','Gender','Mobile','Email','Address','City','State','Pincode','Manufacturing Year','Vehicle Registration No','Vehicle Manufacturer','Model','Variant','Engine No.','Chassis No.','Nominee Name','Nominee Relationship','Nominee Gender','Nominee Age','Plan','Plan Type','New Vehicle','Dealer ID','Timestamp']];
 
-const riskStartDate = "2022-10-23";
+const riskStartDate = "2022-10-24";
 const gender = 'Male';
 const city = 'Mathura';
 const pincode = '281001';
 const state = 'Uttar Pradesh';
-const timestamp = '2022-10-23 22:19:01';
+const timestamp = '2022-10-24 11:29:01';
 const planType = 'CPA + RSA + AHDC + DOC';
 const manufacturingYear = '2022';
 
@@ -27,6 +27,10 @@ const cleanName = (name,address)=>{
 
 }
 
+const getDob = (dob)=>{
+    const splitDob = dob.split('/');
+    return `${splitDob[2]}-${splitDob[1]}-${splitDob[0]}`;
+}
 
 const setDealerID = (email)=>{
     if(email == 'upadhyaymotor@gmail.com'){
@@ -50,11 +54,12 @@ for(let i=0;i<data.length;i++){
     let record = data[i];
 
     let dealerID = setDealerID(record["Registered Dealer Email"]);
+    let dob = getDob(record.DOB.toString());
 
     let freshName = cleanName(record.Name,record.Address);
     const nomineeRelation = record.Relation.includes('Spouse')?'Spouse':record.Relation;
 
-    let newRecord = [record["Registered Dealer Email"],riskStartDate,freshName[0],gender,record.Mob1,record["Registered Dealer Email"],freshName[1],city,state,pincode,manufacturingYear,'NEW','Hero',record["Model Code"],'BS6',record["Engine No"],record["Frame No"],record.Nominee,nomineeRelation,'Female',record.Age,record.PLAN,planType,'Yes',dealerID,timestamp];
+    let newRecord = [record["Registered Dealer Email"],riskStartDate,freshName[0],dob,gender,record.Mob1,record["Registered Dealer Email"],freshName[1],city,state,pincode,manufacturingYear,'NEW','Hero',record["Model Code"],'BS6',record["Engine No"],record["Frame No"],record.Nominee,nomineeRelation,'Female',record.Age,record.PLAN,planType,'Yes',dealerID,timestamp];
 
     sheetData.push(newRecord);
 }
